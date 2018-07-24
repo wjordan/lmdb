@@ -2,13 +2,16 @@ require 'mkmf'
 
 $CFLAGS = '-std=c99 -Wall -g'
 
-# Embed lmdb if we cannot find it
-if enable_config("bundled-lmdb", false) || !(find_header('lmdb.h') && have_library('lmdb', 'mdb_env_create'))
-  $INCFLAGS << " -I$(srcdir)/liblmdb"
-  $VPATH ||= []
-  $VPATH << "$(srcdir)/liblmdb"
-  $srcs = Dir.glob("#{$srcdir}/{,liblmdb/}*.c").map {|n| File.basename(n) }
-end
+# Always embed lmdb for consistency.
+lib = 'liblmdb/libraries/liblmdb'
+$INCFLAGS << " -I$(srcdir)/#{lib}"
+$VPATH ||= []
+$VPATH << "$(srcdir)/#{lib}"
+$srcs = %w[
+  mdb.c
+  midl.c
+  lmdb_ext.c
+]
 
 have_header 'limits.h'
 have_header 'string.h'
