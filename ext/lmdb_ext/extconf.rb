@@ -3,7 +3,7 @@ require 'mkmf'
 $CFLAGS = '-std=c99 -Wall -g'
 
 # Embed lmdb if we cannot find it
-if enable_config("bundled-lmdb", false) || !(find_header('lmdb.h') && have_library('lmdb', 'mdb_env_create'))
+if enable_config("bundled-lmdb", true) || !(find_header('lmdb.h') && have_library('lmdb', 'mdb_env_create'))
   $INCFLAGS << " -I$(srcdir)/liblmdb"
   $VPATH ||= []
   $VPATH << "$(srcdir)/liblmdb"
